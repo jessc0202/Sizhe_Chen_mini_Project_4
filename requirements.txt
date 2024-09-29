@@ -5,6 +5,8 @@ pytest
 pytest-cov
 pylint
 boto3
+polars
+matplotlib
 
 #web
 fastapi
