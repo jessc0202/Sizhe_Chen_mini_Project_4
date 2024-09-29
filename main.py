@@ -3,7 +3,6 @@ Main Functions
 """
 import polars as pl
 import matplotlib.pyplot as plt
-from pyinstrument import Profiler
 
 def load_dataset_pl(file_path):
     """
@@ -63,41 +62,19 @@ def visualize_boxplot_pl(dataframe, column_name):
     plt.grid(True)
     plt.show()
 
-def save_to_md_pl(summary_stats, column_name):
-    """
-    Save the summary statistics of a column to a markdown (.md) file.
-    """
-    with open("summary_statistics.md", "w", encoding="utf-8") as file:
-        file.write(f"# Summary Statistics for {column_name}\n\n")
-        for stat, value in summary_stats.items():
-            file.write(f"**{stat.capitalize()}**: {value[0]}\n\n")
-
-def save_profiler_to_md(profiler, filename="profiler_results.md"):
-    """
-    Save profiler results to a markdown (.md) file.
-    """
-    with open(filename, "w", encoding="utf-8") as file:
-        file.write("# Profiler Results\n\n")
-        file.write("```\n")
-        file.write(profiler.output_text(unicode=True, color=False))  # Save profiler text results
-        file.write("\n```\n")
-
 
 if __name__ == "__main__":
-    dataset_path = "StudentPerformanceFactors.csv" 
+    dataset_path = "StudentPerformanceFactors.csv"
     column_to_analyze = "Hours_Studied"
 
+    # Load the dataset
     df_data = load_dataset_pl(dataset_path)
 
+    # Generate summary statistics
     summary_stats_data = general_describe_pl(df_data, column_to_analyze)
 
-    profiler_instance = Profiler(interval=0.1)
-    profiler_instance.start()
 
-    dataset_path = "StudentPerformanceFactors.csv" 
-    column_to_analyze = "Hours_Studied"
-
-    profiler_instance.stop()
-    save_profiler_to_md(profiler_instance, "profiler_results.md")
-    save_to_md_pl(summary_stats_data, column_to_analyze)
-    
+    # Perform visualizations (Optional: you can comment out if not needed)
+    generate_vis_pl(df_data, "Hours_Studied", "Exam_Score")
+    generate_dist_pl(df_data, column_to_analyze)
+    visualize_boxplot_pl(df_data, column_to_analyze)
